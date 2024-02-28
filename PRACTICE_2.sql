@@ -4,7 +4,7 @@ where id % 2 = 0
 ---ex 2
 select (count(city) - count(distinct city)) from station;
 ---ex 3
-
+select round(avg(salary)) - round(avg(replace(salary,0,''))) from employees
 ---ex 4
 SELECT
 ROUND(cast(sum(item_count*order_occurrences)/sum(order_occurrences)as decimal) ,1)as mean
