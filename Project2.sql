@@ -5,9 +5,10 @@ FORMAT_DATE("%Y-%m", created_at) AS month_year,
 COUNT(user_id) AS total_users,
 COUNT(order_id) AS total_order
 FROM `bigquery-public-data.thelook_ecommerce.order_items`
-WHERE status = 'Complete' or FORMAT_DATE("%Y-%m", created_at) between '2019-01-01' and '2022-4-30'
+WHERE status = 'Complete' and FORMAT_DATE("%Y-%m", created_at) between '2018-12-31' and '2022-4-30' 
 GROUP BY month_year
 ORDER BY month_year 
+    --Insight. Số lượng đơn hàng tăng dần theo mỗi tháng
 --2.Giá trị đơn hàng trung bình (AOV) và số lượng khách hàng mỗi tháng
 --Thống kê giá trị đơn hàng trung bình và tổng số người dùng khác nhau mỗi tháng (Từ 1/2019-4/2022)
 SELECT 
@@ -15,9 +16,10 @@ FORMAT_DATE("%Y-%m", created_at) AS month_year,
 COUNT(DISTINCT user_id) AS distinct_users,
 ROUND((SUM(sale_price)/COUNT(DISTINCT order_id)),2) AS average_order_value
 FROM `bigquery-public-data.thelook_ecommerce.order_items`
-WHERE status = 'Complete' or FORMAT_DATE("%Y-%m", created_at) between '2019-01-01' and '2022-4-30'
+WHERE status = 'Complete' and FORMAT_DATE("%Y-%m", created_at) between '2018-12-31' and '2022-04-30'
 GROUP BY month_year
 ORDER BY month_year;
+    --Insight. Số lượng người dùng mới mỗi tháng tăng 
 --3.3. Nhóm khách hàng theo độ tuổi
 --Tìm các khách hàng có trẻ tuổi nhất và lớn tuổi nhất theo từng giới tính (Từ 1/2019-4/2022)
 with twt_customer as
@@ -31,7 +33,6 @@ WHEN age > 69 THEN 'Oldest'
 from bigquery-public-data.thelook_ecommerce.users
 where created_at between '2019-01-01' and '2022-4-30'
 group by first_name,last_name,gender,age)
-
 select gender,age,
 COUNT(female) AS female,
 COUNT(male) AS male,
@@ -42,6 +43,7 @@ WHEN age > 69 THEN 'Oldest'
 from twt_customer
 where age =12 or age=70
 group by gender,age
+    --Insight. KH trẻ nhất là 12 tuổi 534 Nữ và 505 Nam, KH lớn tuổi nhất là 70 tuổi 545 Nữ và 536 Nam
 --4.Top 5 sản phẩm mỗi tháng.
 --Thống kê top 5 sản phẩm có lợi nhuận cao nhất từng tháng (xếp hạng cho từng sản phẩm). 
 WITH
